@@ -1,0 +1,1324 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hall of Shame</title>
+<meta name="description" content="Animal Company news, ranked by who behaved worst.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@800;900&family=Inter+Tight:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<script>try{var t=localStorage.getItem('hos-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<style>
+:root { color-scheme: light; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+
+/* Layout: strictly black and white drawing sheet. A full-screen black gate opens first (animated logo, then a PIN pad with an "I'm a visitor" exit). Behind it: masthead on a faint crosshair grid, then a two-column desk with the sticky ranking board beside the filing form (writers only) and the record. Severity is shown by fill darkness, not hue. */
+:root {
+  --bg: #E8E8E8;
+  --surface: #F4F4F4;
+  --ink: #0A0A0A;
+  --muted: #595959;
+  --line: #C8C8C8;
+  --rule: #0A0A0A;
+  --mark: #8F8F8F;
+  --t1c: #FFFFFF; --t1on: #0A0A0A;
+  --t2c: #BDBDBD; --t2on: #0A0A0A;
+  --t3c: #555555; --t3on: #FFFFFF;
+  --t4c: #0A0A0A; --t4on: #FFFFFF;
+  --gate-bg: #000000;
+  --gate-fg: #FFFFFF;
+  --gate-dim: #9A9A9A;
+  --gate-line: #4A4A4A;
+  --display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --body: "Inter Tight", "Helvetica Neue", Arial, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #050505; --surface: #0F0F0F; --ink: #F5F5F5; --muted: #A0A0A0; --line: #2B2B2B; --rule: #D0D0D0; --mark: #5A5A5A;
+    --t1c: #050505; --t1on: #F5F5F5;
+    --t2c: #4A4A4A; --t2on: #FFFFFF;
+    --t3c: #B8B8B8; --t3on: #050505;
+    --t4c: #F5F5F5; --t4on: #050505;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #050505; --surface: #0F0F0F; --ink: #F5F5F5; --muted: #A0A0A0; --line: #2B2B2B; --rule: #D0D0D0; --mark: #5A5A5A;
+  --t1c: #050505; --t1on: #F5F5F5;
+  --t2c: #4A4A4A; --t2on: #FFFFFF;
+  --t3c: #B8B8B8; --t3on: #050505;
+  --t4c: #F5F5F5; --t4on: #050505;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font: 400 16px/1.5 var(--body);
+  padding-block: clamp(24px, 4vw, 48px) 80px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+body.locked { overflow: hidden; }
+.wrap { max-width: 1120px; margin: 0 auto; display: grid; gap: 40px; }
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+
+.t1 { --c: var(--t1c); --on: var(--t1on); }
+.t2 { --c: var(--t2c); --on: var(--t2on); }
+.t3 { --c: var(--t3c); --on: var(--t3on); }
+.t4 { --c: var(--t4c); --on: var(--t4on); }
+
+/* Seed mark: a pointed oval, the page's one recurring shape */
+.seed { display: inline-block; width: .62em; height: .62em; background: var(--ink); border-radius: 0 100% 0 100%; transform: rotate(45deg); flex: none; }
+
+/* Crop marks at the outside corners of a block */
+.reg { position: relative; }
+.reg::before {
+  content: ""; position: absolute; inset: -10px; pointer-events: none;
+  background:
+    linear-gradient(var(--mark), var(--mark)) top left / 14px 1px no-repeat,
+    linear-gradient(var(--mark), var(--mark)) top left / 1px 14px no-repeat,
+    linear-gradient(var(--mark), var(--mark)) top right / 14px 1px no-repeat,
+    linear-gradient(var(--mark), var(--mark)) top right / 1px 14px no-repeat,
+    linear-gradient(var(--mark), var(--mark)) bottom left / 14px 1px no-repeat,
+    linear-gradient(var(--mark), var(--mark)) bottom left / 1px 14px no-repeat,
+    linear-gradient(var(--mark), var(--mark)) bottom right / 14px 1px no-repeat,
+    linear-gradient(var(--mark), var(--mark)) bottom right / 1px 14px no-repeat;
+}
+
+/* Gate: splash and PIN pad. One committed look, black with white, in both themes. */
+.gate {
+  position: fixed; inset: 0; z-index: 100; overflow-y: auto;
+  background: var(--gate-bg); color: var(--gate-fg);
+  display: grid; place-items: center;
+  padding-top: max(24px, env(safe-area-inset-top, 0px));
+  padding-bottom: max(24px, env(safe-area-inset-bottom, 0px));
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.gate :focus-visible { outline-color: var(--gate-fg); }
+.gate-in { width: min(340px, 100%); display: grid; gap: 22px; justify-items: center; text-align: center; margin-block: auto; }
+.splash { display: grid; gap: 22px; justify-items: center; text-align: center; cursor: pointer; background: none; border: 0; color: inherit; font: inherit; padding: 24px 8px; }
+.logo { --eye: var(--gate-bg); }
+.logo svg { width: min(58vw, 240px); height: auto; display: block; overflow: visible; }
+.logo.small svg { width: 84px; }
+.logo.mini { --eye: var(--bg); }
+.logo.mini svg { width: 64px; }
+.logo .blk { fill: currentColor; }
+.logo .a { animation: ina .7s cubic-bezier(.2, .8, .2, 1) both; }
+.logo .b { animation: inb .7s .1s cubic-bezier(.2, .8, .2, 1) both; }
+.logo .eye { fill: var(--eye); transform-box: fill-box; transform-origin: center; transform: scaleY(0); animation: eopen .45s .85s cubic-bezier(.2, .8, .2, 1) forwards; }
+.logo .iris { fill: currentColor; transform-box: fill-box; transform-origin: center; transform: scale(0); animation: ipop .35s 1.2s cubic-bezier(.3, 1.6, .5, 1) forwards; }
+.logo .eyeg { transform-box: fill-box; transform-origin: center; animation: blink .4s 2.3s; }
+@keyframes ina { from { transform: translate(-26px, -26px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes inb { from { transform: translate(26px, 26px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes eopen { to { transform: scaleY(1); } }
+@keyframes ipop { to { transform: scale(1); } }
+@keyframes blink { 50% { transform: scaleY(.08); } }
+.logo.small .a, .logo.small .b, .logo.small .eye, .logo.small .iris, .logo.small .eyeg { animation: none; opacity: 1; transform: none; }
+.lockside { display: grid; gap: 12px; margin-bottom: .5em; }
+.wm { font: 900 clamp(1.7rem, 8vw, 2.5rem)/1 var(--display); letter-spacing: .12em; text-transform: uppercase; margin: 0; }
+.wmsub { font: 400 .72rem var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--gate-dim); margin: 0; }
+.hint { font: 400 .72rem var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--gate-dim); }
+.pad { display: grid; gap: 18px; justify-items: center; width: 100%; }
+.pad h2 { font: 800 1.3rem/1.1 var(--display); text-transform: uppercase; letter-spacing: .06em; margin: 0; justify-content: center; }
+.pad .psub { margin: 0; color: var(--gate-dim); font-size: .92rem; min-height: 1.4em; }
+.dots { display: flex; gap: 14px; }
+.dot { width: 16px; height: 16px; border: 1px solid var(--gate-fg); border-radius: 50%; }
+.dot.on { background: var(--gate-fg); }
+.keys { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; }
+.key { min-height: 64px; font: 500 1.6rem var(--mono); background: transparent; color: var(--gate-fg); border: 1px solid var(--gate-line); border-radius: 0; cursor: pointer; }
+.key.fn { font-size: .78rem; letter-spacing: .12em; color: var(--gate-dim); }
+.key:active:not(:disabled) { background: var(--gate-fg); color: var(--gate-bg); }
+.key:disabled { opacity: .35; cursor: not-allowed; }
+.gmsg { min-height: 1.4em; margin: 0; font: 500 .85rem var(--mono); }
+.visit { width: 100%; min-height: 48px; background: transparent; color: var(--gate-fg); border: 1px solid var(--gate-fg); border-radius: 0; font: 500 .78rem var(--mono); letter-spacing: .12em; text-transform: uppercase; cursor: pointer; }
+.shake { animation: shake .35s; }
+@keyframes shake { 20% { transform: translateX(-8px); } 40% { transform: translateX(8px); } 60% { transform: translateX(-5px); } 80% { transform: translateX(5px); } }
+@media (prefers-reduced-motion: reduce) {
+  .logo .a, .logo .b, .logo .eye, .logo .iris, .logo .eyeg { animation: none; opacity: 1; transform: none; }
+  .shake { animation: none; }
+}
+
+/* Masthead */
+.mast { position: relative; display: grid; gap: 18px; padding-block: 8px 4px; }
+.mast::before {
+  content: ""; position: absolute; inset: -12px -16px; z-index: -1; background: var(--line); opacity: .7;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Cpath d='M24 19v10M19 24h10' stroke='black' stroke-width='1'/%3E%3C/svg%3E");
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Cpath d='M24 19v10M19 24h10' stroke='black' stroke-width='1'/%3E%3C/svg%3E");
+}
+.topline { display: flex; flex-wrap: wrap; gap: 10px 20px; align-items: center; justify-content: space-between; }
+.kicker { display: flex; align-items: center; gap: 12px; font: 500 .74rem var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin: 0; }
+.modebar { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 16px; }
+.badge { font: 500 .66rem var(--mono); letter-spacing: .12em; text-transform: uppercase; padding: 3px 8px; border: 1px solid var(--rule); }
+.badge.w { background: var(--ink); color: var(--bg); }
+.lock { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px 28px; }
+h1 { font: 900 clamp(3.2rem, 13vw, 7.4rem)/.88 var(--display); text-transform: uppercase; margin: 0; letter-spacing: -.02em; }
+h1 em { font-style: normal; color: var(--bg); -webkit-text-stroke: 2px var(--ink); paint-order: stroke fill; }
+.lockup { margin: 0; font: 500 1.05rem/1.2 var(--body); color: var(--muted); letter-spacing: -.005em; }
+.scale { list-style: none; margin: 6px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 22px; font: 500 .74rem var(--mono); color: var(--muted); }
+.scale li { display: flex; align-items: center; gap: 8px; }
+.scale i { width: 12px; height: 12px; background: var(--c); border: 1px solid var(--rule); display: inline-block; }
+
+/* Desk */
+.desk { display: grid; gap: 44px; grid-template-columns: minmax(0, 1fr); align-items: start; }
+@media (min-width: 920px) {
+  .desk { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 48px; }
+  .boardcol { position: sticky; top: 20px; }
+}
+.col { display: grid; gap: 22px; min-width: 0; }
+h2 { display: flex; align-items: center; gap: 12px; font: 800 1.2rem/1 var(--display); text-transform: uppercase; letter-spacing: .02em; margin: 0; }
+.sub { margin: 8px 0 0; color: var(--muted); font-size: .92rem; max-width: 52ch; }
+.panel { position: relative; background: var(--surface); border: 1px solid var(--rule); padding: 20px; }
+
+/* Ranking */
+#board { position: relative; }
+.rows { list-style: none; margin: 0; padding: 0; display: grid; border-top: 1px solid var(--rule); background: var(--surface); }
+.row { display: grid; grid-template-columns: 2.6rem minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 14px 10px; border-bottom: 1px solid var(--line); }
+.row.top { background: var(--ink); color: var(--bg); padding-block: 18px; border-bottom-color: var(--ink); }
+.rank { font: 600 1.4rem/1 var(--mono); color: var(--muted); text-align: center; display: grid; justify-items: center; gap: 8px; }
+.row.top .rank { color: var(--bg); }
+.row.top .seed { background: var(--bg); }
+.who { min-width: 0; display: grid; gap: 4px; }
+.name { font-weight: 700; font-size: 1.02rem; overflow-wrap: anywhere; letter-spacing: -.005em; }
+.row.top .name { font-size: 1.25rem; }
+.meta { font: 400 .72rem var(--mono); color: var(--muted); }
+.row.top .meta, .row.top .pts small { color: var(--bg); opacity: .75; }
+.bar { display: block; height: 8px; background: var(--line); border: 1px solid var(--rule); margin-top: 6px; }
+.bar i { display: block; height: 100%; background: var(--c); }
+.bar.t1 i { background: var(--bg); }
+.row.top .bar { background: #777; background: color-mix(in srgb, var(--bg) 35%, var(--ink)); border-color: var(--bg); }
+.row.top .bar i { background: var(--bg); }
+.pts { font: 600 1.5rem/1 var(--mono); font-variant-numeric: tabular-nums; text-align: right; }
+.pts small { display: block; font-weight: 400; font-size: .62rem; color: var(--muted); letter-spacing: .12em; text-transform: uppercase; margin-top: 4px; }
+.more { font: 400 .74rem var(--mono); color: var(--muted); margin: 12px 0 0; }
+
+/* Form */
+form { display: grid; gap: 16px; }
+.fields { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+label, .lbl { display: grid; gap: 6px; font: 500 .72rem var(--mono); letter-spacing: .08em; text-transform: uppercase; min-width: 0; }
+input[type="text"], input[type="url"], select, textarea {
+  width: 100%; min-height: 44px; padding: 10px 12px; font: 400 1rem var(--body); letter-spacing: normal; text-transform: none;
+  color: var(--ink); background: var(--bg); border: 1px solid var(--rule); border-radius: 0;
+}
+textarea { min-height: 120px; resize: vertical; line-height: 1.45; }
+input::placeholder, textarea::placeholder { color: var(--muted); opacity: .85; }
+.shame { display: grid; gap: 8px; padding: 14px; background: var(--bg); border: 1px solid var(--rule); }
+.shame .read { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.shame .num { font: 600 2.6rem/1 var(--mono); font-variant-numeric: tabular-nums; min-width: 2.2ch; }
+.shame .tier { font: 800 .9rem/1 var(--display); text-transform: uppercase; letter-spacing: .06em; padding: 6px 10px; background: var(--c); color: var(--on); border: 1px solid var(--rule); }
+input[type="range"] { width: 100%; accent-color: var(--ink); min-height: 32px; }
+.ticks { display: flex; justify-content: space-between; font: 400 .68rem var(--mono); color: var(--muted); letter-spacing: normal; text-transform: none; }
+.btn { font: 600 .85rem var(--body); letter-spacing: .1em; text-transform: uppercase; min-height: 48px; padding: 0 24px; border: 0; border-radius: 0; background: var(--ink); color: var(--bg); cursor: pointer; }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+.actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.say { margin: 0; font-size: .9rem; min-height: 1.4em; }
+.say.err { font-weight: 700; }
+.say.err::before { content: "! "; }
+
+/* Feed */
+.tools { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; }
+.tools label { flex: 1 1 180px; }
+.seg { display: inline-flex; border: 1px solid var(--rule); }
+.seg button { font: 500 .72rem var(--mono); letter-spacing: .08em; text-transform: uppercase; min-height: 44px; padding: 0 14px; border: 0; background: transparent; color: var(--ink); cursor: pointer; }
+.seg button + button { border-left: 1px solid var(--rule); }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.notice { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; justify-content: space-between; padding: 12px 14px; background: var(--surface); border: 1px dashed var(--rule); font-size: .9rem; }
+.notice p { margin: 0; flex: 1 1 220px; }
+.link { font: 500 .72rem var(--mono); letter-spacing: .08em; text-transform: uppercase; background: none; border: 0; padding: 8px 0; min-height: 36px; color: var(--ink); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.stories { display: grid; gap: 16px; }
+.story { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 12px 14px; padding: 14px 16px 16px; background: var(--surface); border: 1px solid var(--rule); }
+.fileline { grid-column: 1 / -1; display: flex; justify-content: space-between; gap: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--line); font: 400 .68rem var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.score { align-self: start; height: 64px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--c); color: var(--on); border: 1px solid var(--rule); font-family: var(--mono); }
+.score b { font-size: 1.8rem; line-height: 1; font-weight: 600; font-variant-numeric: tabular-nums; }
+.score span { font-size: .66rem; opacity: .85; }
+.sbody { min-width: 0; display: grid; gap: 8px; }
+.top-line { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; }
+.co { font: 600 .82rem var(--mono); letter-spacing: .02em; overflow-wrap: anywhere; }
+.tag { font: 500 .66rem var(--mono); letter-spacing: .1em; text-transform: uppercase; border: 1px solid var(--rule); padding: 2px 6px; color: var(--ink); }
+.tag.ex { border-style: dashed; }
+.story h3 { font: 700 1.3rem/1.15 var(--body); letter-spacing: -.012em; margin: 0; overflow-wrap: anywhere; }
+.story p { margin: 0; white-space: pre-line; overflow-wrap: anywhere; }
+.foot { display: flex; flex-wrap: wrap; gap: 2px 14px; align-items: center; font: 400 .72rem var(--mono); color: var(--muted); }
+.foot .lvl { color: var(--ink); font-weight: 600; text-transform: uppercase; letter-spacing: .08em; }
+.foot a { color: var(--ink); text-underline-offset: 3px; }
+
+/* Empty and loading states: hatched field with a plate */
+.empty { padding: 22px; border: 1px solid var(--rule); background: repeating-linear-gradient(135deg, var(--line) 0 1px, transparent 1px 9px); display: grid; justify-items: center; }
+.plate { background: var(--surface); border: 1px solid var(--rule); padding: 14px 18px; text-align: center; max-width: 36ch; color: var(--muted); font-size: .92rem; }
+.plate strong { display: block; font: 800 1.05rem var(--display); text-transform: uppercase; letter-spacing: .03em; color: var(--ink); margin-bottom: 4px; }
+
+/* Section jump links and publish bar */
+.jump { display: flex; flex-wrap: wrap; gap: 4px 22px; margin-top: 4px; }
+.jump a { font: 500 .72rem var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--rule); padding: 10px 0 2px; }
+.jump a:hover { background: var(--ink); color: var(--bg); }
+.pubbar { display: grid; gap: 12px; }
+.pubbar:empty { display: none; }
+
+/* Lower sections: conspiracy board and supporters wall */
+.lower { display: grid; gap: 56px; grid-template-columns: minmax(0, 1fr); align-items: start; }
+@media (min-width: 920px) { .lower { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 48px; } }
+.lower > section { scroll-margin-top: 20px; }
+textarea.short { min-height: 80px; }
+
+/* Theories: case files */
+.theory { grid-template-columns: minmax(0, 1fr); border-style: dashed; }
+.theory .fileline { margin: -14px -16px 0; padding: 8px 16px; border-bottom: 1px dashed var(--rule); background: repeating-linear-gradient(135deg, var(--line) 0 1px, transparent 1px 7px); }
+.pips { display: inline-flex; gap: 4px; align-items: center; }
+.pips i { width: 10px; height: 10px; border: 1px solid var(--rule); border-radius: 50%; display: inline-block; }
+.pips i.on { background: var(--ink); }
+.st-unproven .tag.status { border-style: dashed; }
+.st-confirmed .tag.status { background: var(--ink); color: var(--bg); }
+.st-debunked h3 { text-decoration: line-through; text-decoration-thickness: 2px; color: var(--muted); }
+
+/* Supporters wall */
+.wall { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr)); }
+.wall > .empty { grid-column: 1 / -1; }
+.sup { display: grid; gap: 8px; align-content: start; min-width: 0; padding: 14px 16px; background: var(--surface); border: 1px solid var(--rule); }
+.sup p { margin: 0; overflow-wrap: anywhere; white-space: pre-line; }
+.sup .co { font-size: .95rem; }
+
+/* Touch screens: larger tap targets */
+@media (pointer: coarse) {
+  .link, .jump a { min-height: 44px; display: inline-flex; align-items: center; }
+}
+</style>
+</head>
+<body>
+
+<div id="gate" class="gate" role="dialog" aria-modal="true" aria-label="Hall of Shame">
+  <div class="gate-in">
+    <div id="splash" class="splash" role="button" tabindex="0" aria-label="Continue">
+      <div class="logo" id="logo-big"></div>
+      <p class="wm">Hall of Shame</p>
+      <p class="wmsub">Animal Company / Player Records</p>
+      <span class="hint">Tap to continue</span>
+    </div>
+
+    <div id="pad" class="pad" hidden>
+      <div class="logo small" id="logo-small"></div>
+      <div>
+        <h2 id="pad-title">Enter PIN</h2>
+      </div>
+      <p class="psub" id="pad-sub"></p>
+      <div class="dots" id="dots" aria-hidden="true"><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i></div>
+      <div class="keys" id="keys"></div>
+      <p class="gmsg" id="gmsg" role="status" aria-live="polite"></p>
+      <button class="visit" id="btn-visit" type="button">I'm a visitor</button>
+    </div>
+  </div>
+</div>
+
+<div class="wrap" id="wrap" inert>
+  <header class="mast">
+    <div class="topline">
+      <p class="kicker"><i class="seed" aria-hidden="true"></i>Animal Company news, ranked by who behaved worst</p>
+      <div class="modebar">
+        <span class="badge" id="badge">Read only</span>
+        <button class="link" id="btn-theme" type="button" aria-label="Change colour theme">Theme</button>
+        <button class="link" id="btn-lock" type="button">Unlock</button>
+        <button class="link" id="btn-pin" type="button" hidden>Change PIN</button>
+      </div>
+    </div>
+    <div class="lock">
+      <h1>Hall of<br><em>Shame</em></h1>
+      <div class="lockside"><div class="logo small mini" id="logo-mini"></div><p class="lockup">Animal Company<br>Player Records</p></div>
+    </div>
+    <ol class="scale" aria-label="Shame scale">
+      <li class="t1"><i></i>1-3 Sloppy</li>
+      <li class="t2"><i></i>4-6 Shameful</li>
+      <li class="t3"><i></i>7-9 Disgraceful</li>
+      <li class="t4"><i></i>10 Hall of Infamy</li>
+    </ol>
+    <nav class="jump" aria-label="Sections">
+      <a href="#h-board">Ranking</a>
+      <a href="#h-feed">Record</a>
+      <a href="#conspiracies">Conspiracies</a>
+      <a href="#supporters">Supporters</a>
+    </nav>
+  </header>
+
+  <div id="pubbar" class="pubbar"></div>
+
+  <div class="desk">
+    <section class="boardcol" aria-labelledby="h-board">
+      <div class="col">
+        <div>
+          <h2 id="h-board"><i class="seed" aria-hidden="true"></i>Ranking</h2>
+          <p class="sub" id="board-sub">Players by total shame points.</p>
+        </div>
+        <div id="board" class="reg"></div>
+      </div>
+    </section>
+
+    <div class="col">
+      <section class="panel reg" id="formpanel" aria-labelledby="h-file" hidden>
+        <form id="form" novalidate>
+          <div>
+            <h2 id="h-file"><i class="seed" aria-hidden="true"></i>File a story</h2>
+            <p class="sub">Describe what happened in the game. Use in-game usernames only, never real names, emails or social accounts.</p>
+          </div>
+          <div class="fields">
+            <label for="player">Player username
+              <input id="player" name="player" type="text" list="player-list" maxlength="40" autocomplete="off" placeholder="Their in-game name">
+              <datalist id="player-list"></datalist>
+            </label>
+            <label for="kind">What they did
+              <select id="kind" name="kind"></select>
+            </label>
+          </div>
+          <label for="headline">Headline
+            <input id="headline" name="headline" type="text" maxlength="120" autocomplete="off" placeholder="What happened, in one line">
+          </label>
+          <label for="body">The story
+            <textarea id="body" name="body" maxlength="2000" placeholder="What they did, in which lobby or round, and when. Behavior only."></textarea>
+          </label>
+          <label for="source">Clip or screenshot link (optional)
+            <input id="source" name="source" type="url" maxlength="300" autocomplete="off" placeholder="https://">
+          </label>
+          <div class="shame t2" id="shamebox">
+            <div class="lbl">Shame score</div>
+            <div class="read"><span class="num" id="score-num">5</span><span class="tier" id="score-tier">Shameful</span></div>
+            <input id="score" name="score" type="range" min="1" max="10" step="1" value="5" aria-label="Shame score from 1 to 10">
+            <div class="ticks" aria-hidden="true"><span>1 mild</span><span>10 infamous</span></div>
+          </div>
+          <label for="author">Filed by (optional)
+            <input id="author" name="author" type="text" maxlength="40" autocomplete="off" placeholder="Your name or initials">
+          </label>
+          <div class="actions">
+            <button class="btn" id="submit" type="submit">Add to the Hall</button>
+            <p class="say" id="say" role="status" aria-live="polite"></p>
+          </div>
+        </form>
+      </section>
+
+      <section aria-labelledby="h-feed" class="col">
+        <div>
+          <h2 id="h-feed"><i class="seed" aria-hidden="true"></i>The record</h2>
+          <p class="sub" id="feed-sub"></p>
+        </div>
+        <div class="tools">
+          <label for="filter">Type
+            <select id="filter"></select>
+          </label>
+          <div class="seg" role="group" aria-label="Sort stories">
+            <button type="button" id="sort-new" aria-pressed="true">Newest</button>
+            <button type="button" id="sort-score" aria-pressed="false">Most shameful</button>
+          </div>
+        </div>
+        <div id="notice"></div>
+        <div id="feed" class="stories" aria-live="polite"></div>
+      </section>
+    </div>
+  </div>
+
+  <div class="lower">
+    <section id="conspiracies" class="col" aria-labelledby="h-theory">
+      <div>
+        <h2 id="h-theory"><i class="seed" aria-hidden="true"></i>Conspiracy board</h2>
+        <p class="sub" id="theory-sub"></p>
+      </div>
+      <section class="panel reg" id="tformpanel" aria-labelledby="h-tfile" hidden>
+        <form id="tform" novalidate>
+          <div>
+            <h2 id="h-tfile"><i class="seed" aria-hidden="true"></i>Post a theory</h2>
+            <p class="sub">About the game only. No real people and no personal details. Only writers can post here.</p>
+          </div>
+          <label for="ttitle">Theory title
+            <input id="ttitle" name="ttitle" type="text" maxlength="100" autocomplete="off" placeholder="The one-line version">
+          </label>
+          <label for="tbody">What you think is going on
+            <textarea id="tbody" name="tbody" maxlength="1500" placeholder="What you noticed, where, and why it looks suspicious."></textarea>
+          </label>
+          <div class="fields">
+            <label for="tstatus">Status
+              <select id="tstatus" name="tstatus"></select>
+            </label>
+            <label for="tlevel">Tinfoil level
+              <select id="tlevel" name="tlevel"></select>
+            </label>
+          </div>
+          <label for="tauthor">Filed by (optional)
+            <input id="tauthor" name="tauthor" type="text" maxlength="40" autocomplete="off" placeholder="Your name or initials">
+          </label>
+          <div class="actions">
+            <button class="btn" id="tsubmit" type="submit">Pin to the board</button>
+            <p class="say" id="tsay" role="status" aria-live="polite"></p>
+          </div>
+        </form>
+      </section>
+      <div id="tfeed" class="stories" aria-live="polite"></div>
+    </section>
+
+    <section id="supporters" class="col" aria-labelledby="h-sup">
+      <div>
+        <h2 id="h-sup"><i class="seed" aria-hidden="true"></i>People who support us</h2>
+        <p class="sub" id="sup-sub"></p>
+      </div>
+      <section class="panel reg" id="sformpanel" aria-labelledby="h-sfile" hidden>
+        <form id="sform" novalidate>
+          <div>
+            <h2 id="h-sfile"><i class="seed" aria-hidden="true"></i>Add a supporter</h2>
+            <p class="sub">Only writers can add or remove names. Use the name the person wants shown.</p>
+          </div>
+          <label for="sname">Name
+            <input id="sname" name="sname" type="text" maxlength="40" autocomplete="off" placeholder="Name or username">
+          </label>
+          <label for="snote">Their message (optional)
+            <textarea id="snote" name="snote" class="short" maxlength="200" placeholder="A line about why they back the Hall."></textarea>
+          </label>
+          <div class="actions">
+            <button class="btn" id="ssubmit" type="submit">Add to the wall</button>
+            <p class="say" id="ssay" role="status" aria-live="polite"></p>
+          </div>
+        </form>
+      </section>
+      <div id="sfeed" class="wall" aria-live="polite"></div>
+    </section>
+  </div>
+</div>
+
+<script type="application/json" id="seed">{"pin": {"salt": "4397f838411d5411", "hash": "f423a15f6f021f63c52bc7f671966a296397d2fdcb0c44a4ff7697b2e1c77902"}, "stories": [{"id": "pl-1", "player": "xX_LobbyGoblin_Xx", "kind": "Lobby disruption", "headline": "Kept kicking new players out of the lobby", "body": "Example entry with a made-up username. Every time a newcomer joined, this player voted them out before the round started. It went on for six rounds until the lobby emptied.", "source": "", "score": 7, "createdAt": 1794428600000, "author": "Example", "example": true}, {"id": "pl-2", "player": "xX_LobbyGoblin_Xx", "kind": "Toxic chat", "headline": "Mocked a first-timer for ten minutes straight", "body": "Example entry. The same made-up player kept imitating a new player's voice and laughing over every attempt to talk.", "source": "", "score": 4, "createdAt": 1793996600000, "author": "Example", "example": true}, {"id": "pl-3", "player": "BananaBandit42", "kind": "Scamming", "headline": "Promised a trade, took the item, left the room", "body": "Example entry with a made-up username. This player offered a swap, waited for the other side to hand over the item, then logged out without giving anything back.", "source": "", "score": 9, "createdAt": 1794255800000, "author": "Example", "example": true}, {"id": "pl-4", "player": "NotARealMonkey", "kind": "Cheating", "headline": "Finished a round in record time with a suspicious clip", "body": "Example entry. A made-up player posted a run too fast to be believable and refused to show the full recording when asked by the lobby.", "source": "", "score": 10, "createdAt": 1794342200000, "author": "Example", "example": true}, {"id": "pl-5", "player": "SirTrollsALot", "kind": "Trolling", "headline": "Blocked the exit door and called it a joke", "body": "Example entry. A made-up player stood in the doorway for a full round so nobody could leave, then claimed it was all in good fun.", "source": "", "score": 6, "createdAt": 1793823800000, "author": "Example", "example": true}, {"id": "pl-6", "player": "BananaBandit42", "kind": "Exploiting bugs", "headline": "Showed others how to use a glitch, then used it against them", "body": "Example entry. This made-up player taught a lobby a glitch and then used it to win the next round while everyone else played fair.", "source": "", "score": 8, "createdAt": 1794169400000, "author": "Example", "example": true}, {"id": "pl-7", "player": "SirTrollsALot", "kind": "Toxic chat", "headline": "Shouted over the tutorial for everyone", "body": "Example entry. A made-up player played loud noises through voice chat while a new group tried to learn the basics.", "source": "", "score": 5, "createdAt": 1793651000000, "author": "Example", "example": true}], "theories": [{"id": "t-1", "title": "The lobby music shifts when a griefer joins", "body": "Example entry. A made-up theory: the background track drops a key a few seconds before a known griefer is named in chat. Nobody has timed it yet.", "status": "Unproven", "level": 4, "createdAt": 1794430000000, "author": "Example", "example": true}, {"id": "t-2", "title": "Top-ranked players get matched together on purpose", "body": "Example entry. Another invented theory: the biggest names on the board keep landing in the same lobbies, as if the matchmaker were grouping them.", "status": "Plausible", "level": 3, "createdAt": 1794260000000, "author": "Example", "example": true}, {"id": "t-3", "title": "The loading tips are written by the cheaters", "body": "Example entry. A joke theory that fell apart once someone checked the tip list and found the same tips in every update.", "status": "Debunked", "level": 5, "createdAt": 1794090000000, "author": "Example", "example": true}], "supporters": [{"id": "p-1", "name": "BananaFan_01", "note": "Example entry. Thanks for keeping the lobbies honest.", "createdAt": 1794430000000, "example": true}, {"id": "p-2", "name": "QuietOtter", "note": "Example entry. Showed up on day one and never left.", "createdAt": 1794200000000, "example": true}, {"id": "p-3", "name": "MapMonkey", "note": "", "createdAt": 1793900000000, "example": true}]}</script>
+<script>
+(function () {
+  'use strict';
+  var KINDS = ['Griefing', 'Cheating', 'Toxic chat', 'Scamming', 'Trolling', 'Exploiting bugs', 'Lobby disruption', 'Other'];
+  var TIER_LABELS = ['', 'Sloppy', 'Shameful', 'Disgraceful', 'Hall of Infamy'];
+  var PIN_LEN = 4, DRAFT_KEY = 'hos-draft-v2', DATA_URL = 'stories.js';
+  function tierOf(s) { return s <= 3 ? 1 : s <= 6 ? 2 : s <= 9 ? 3 : 4; }
+  var PII = /[^\s@]+@[^\s@]+\.[a-z]{2,}|\+?\d[\d\s().-]{8,}\d/i;
+  function keyOf(s) { return s.trim().replace(/\s+/g, ' ').toLowerCase(); }
+  function codeOf(str) {
+    var x = 2166136261;
+    for (var i = 0; i < str.length; i++) { x = Math.imul(x ^ str.charCodeAt(i), 16777619); }
+    return (x >>> 0).toString(16).toUpperCase().padStart(8, '0').slice(0, 6);
+  }
+
+  /* Data: published content comes from stories.js (stories, theories, supporters and the PIN hash).
+     Changes made in writer mode are kept as a draft in this browser until stories.js is
+     downloaded and uploaded to the site. */
+  var STATUSES = ['Unproven', 'Plausible', 'Debunked', 'Confirmed'];
+  var LEVELS = ['', 'A hunch', 'Worth a look', 'Getting weird', 'Deep rabbit hole', 'Full tinfoil'];
+  var COLS = ['stories', 'theories', 'supporters'];
+  var base = { pin: null, stories: [], theories: [], supporters: [] };
+  var draft = freshDraft();
+  var stories = [], theories = [], supporters = [], filter = 'all', sort = 'new';
+  var loaded = false, failed = false, busy = false;
+  var mode = 'splash';            /* splash | gate | writer | visitor */
+  var phase = 'enter';            /* enter | create1 | create2 | change1 | change2 */
+  var entry = '', firstPin = '', fails = 0, lockUntil = 0, lockTimer = null, padBusy = false, splashTimer = null;
+
+  function freshDraft() {
+    return { pin: undefined, stories: { added: [], removed: [] }, theories: { added: [], removed: [] }, supporters: { added: [], removed: [] } };
+  }
+  try {
+    var d0 = JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null');
+    if (d0) {
+      COLS.forEach(function (c) {
+        if (d0[c]) {
+          draft[c].added = Array.isArray(d0[c].added) ? d0[c].added : [];
+          draft[c].removed = Array.isArray(d0[c].removed) ? d0[c].removed : [];
+        }
+      });
+      if (d0.pin && d0.pin.salt && d0.pin.hash) draft.pin = d0.pin;
+    }
+  } catch (e) {}
+  function saveDraft() { try { localStorage.setItem(DRAFT_KEY, JSON.stringify(draft)); } catch (e) {} }
+  function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
+
+  function normStory(x) {
+    x = x || {};
+    var player = String(x.player || 'Unnamed');
+    return {
+      id: String(x.id || ('s-' + codeOf(JSON.stringify(x)))), player: player, key: keyOf(player),
+      kind: KINDS.indexOf(x.kind) >= 0 ? x.kind : 'Other',
+      headline: String(x.headline || ''), body: String(x.body || ''), source: String(x.source || ''),
+      score: Math.min(10, Math.max(1, Math.round(Number(x.score)) || 1)),
+      createdAt: Number(x.createdAt) || 0, author: String(x.author || ''), example: !!x.example
+    };
+  }
+  function normTheory(x) {
+    x = x || {};
+    return {
+      id: String(x.id || ('t-' + codeOf(JSON.stringify(x)))),
+      title: String(x.title || 'Untitled theory'), body: String(x.body || ''),
+      status: STATUSES.indexOf(x.status) >= 0 ? x.status : 'Unproven',
+      level: Math.min(5, Math.max(1, Math.round(Number(x.level)) || 1)),
+      createdAt: Number(x.createdAt) || 0, author: String(x.author || ''), example: !!x.example
+    };
+  }
+  function normSupporter(x) {
+    x = x || {};
+    return {
+      id: String(x.id || ('p-' + codeOf(JSON.stringify(x)))),
+      name: String(x.name || 'Anonymous'), note: String(x.note || ''),
+      createdAt: Number(x.createdAt) || 0, example: !!x.example
+    };
+  }
+  var NORM = { stories: normStory, theories: normTheory, supporters: normSupporter };
+
+  function normBase(j) {
+    j = j || {};
+    var out = { pin: j.pin && j.pin.salt && j.pin.hash ? { salt: String(j.pin.salt), hash: String(j.pin.hash) } : null };
+    COLS.forEach(function (c) { out[c] = (Array.isArray(j[c]) ? j[c] : []).map(NORM[c]); });
+    return out;
+  }
+  function reconcile() {
+    COLS.forEach(function (c) {
+      var ids = new Set(base[c].map(function (s) { return s.id; }));
+      draft[c].added = draft[c].added.filter(function (x) { return !ids.has(x.id); });
+      draft[c].removed = draft[c].removed.filter(function (id) { return ids.has(id); });
+    });
+    if (draft.pin && base.pin && draft.pin.hash === base.pin.hash) draft.pin = undefined;
+    saveDraft();
+  }
+  function effectivePin() { return draft.pin || base.pin || null; }
+  function pending() {
+    return COLS.reduce(function (n, c) { return n + draft[c].added.length + draft[c].removed.length; }, draft.pin ? 1 : 0);
+  }
+  function byNew(a, b) { return b.createdAt - a.createdAt; }
+  function merged(c) {
+    var gone = new Set(draft[c].removed);
+    return base[c].filter(function (s) { return !gone.has(s.id); }).concat(draft[c].added.map(NORM[c])).sort(byNew);
+  }
+  function rebuild() {
+    var w = mode === 'writer';
+    stories = w ? merged('stories') : base.stories.slice().sort(byNew);
+    theories = w ? merged('theories') : base.theories.slice().sort(byNew);
+    supporters = w ? merged('supporters') : base.supporters.slice().sort(byNew);
+  }
+  function removeItem(c, id) {
+    var i = draft[c].added.findIndex(function (x) { return x.id === id; });
+    if (i >= 0) draft[c].added.splice(i, 1);
+    else if (draft[c].removed.indexOf(id) < 0) draft[c].removed.push(id);
+  }
+  function exportObj() {
+    var out = { pin: effectivePin() };
+    COLS.forEach(function (c) {
+      out[c] = merged(c).map(function (x) {
+        var o = {};
+        Object.keys(x).forEach(function (k) { if (k !== 'key') o[k] = x[k]; });
+        return o;
+      });
+    });
+    return out;
+  }
+  function exportText() {
+    return 'window.HOS_DATA = ' + JSON.stringify(exportObj(), null, 2) + ';\n';
+  }
+
+  /* One-tap publish: saves stories.js straight into the GitHub repository */
+  var GH_KEY = 'hos-github';
+  function ghConf() {
+    try {
+      var c = JSON.parse(localStorage.getItem(GH_KEY) || 'null');
+      if (c && c.owner && c.repo && c.token) return c;
+    } catch (e) {}
+    return null;
+  }
+  async function ghPublish() {
+    var c = ghConf();
+    if (!c) throw new Error('Add your GitHub details first.');
+    var url = 'https://api.github.com/repos/' + encodeURIComponent(c.owner) + '/' + encodeURIComponent(c.repo) + '/contents/stories.js';
+    var headers = { 'Authorization': 'Bearer ' + c.token, 'Accept': 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' };
+    var q = c.branch ? '?ref=' + encodeURIComponent(c.branch) : '';
+    var r = await fetch(url + q, { headers: headers });
+    var sha;
+    if (r.status === 200) sha = (await r.json()).sha;
+    else if (r.status !== 404) throw new Error(r.status === 401 || r.status === 403 ? 'GitHub refused the token. Check that it has Contents read and write for this repository.' : 'GitHub error ' + r.status + '.');
+    var text = exportText();
+    var body = { message: 'Update stories from the Hall of Shame', content: btoa(unescape(encodeURIComponent(text))) };
+    if (sha) body.sha = sha;
+    if (c.branch) body.branch = c.branch;
+    var p = await fetch(url, { method: 'PUT', headers: Object.assign({ 'Content-Type': 'application/json' }, headers), body: JSON.stringify(body) });
+    if (!p.ok) throw new Error(p.status === 401 || p.status === 403 || p.status === 404 ? 'GitHub would not save. Check the username, repository name and token.' : 'GitHub error ' + p.status + '.');
+    base = normBase(JSON.parse(text.replace(/^window\.HOS_DATA = /, '').replace(/;\s*$/, '')));
+    draft = freshDraft(); saveDraft(); rebuild(); render();
+  }
+  function download() {
+    var blob = new Blob([exportText()], { type: 'text/javascript' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = 'stories.js';
+    document.body.append(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 3000);
+  }
+  function loadScriptData() {
+    return new Promise(function (resolve) {
+      var s = document.createElement('script');
+      s.src = DATA_URL + '?v=' + Date.now();
+      s.onload = function () { var d = window.HOS_DATA; s.remove(); resolve(d || null); };
+      s.onerror = function () { s.remove(); resolve(null); };
+      document.head.append(s);
+    });
+  }
+  async function loadBase() {
+    var raw = await loadScriptData();
+    if (!raw) {
+      try { raw = JSON.parse(document.getElementById('seed').textContent); }
+      catch (e) { failed = true; }
+    }
+    base = normBase(raw);
+    loaded = true; reconcile(); render();
+    if (mode === 'gate') renderPad();
+  }
+
+  function $(id) { return document.getElementById(id); }
+  function h(tag, attrs) {
+    var e = document.createElement(tag);
+    attrs = attrs || {};
+    Object.keys(attrs).forEach(function (k) {
+      var v = attrs[k];
+      if (v == null || v === false) return;
+      if (k === 'class') e.className = v; else e.setAttribute(k, v === true ? '' : v);
+    });
+    for (var i = 2; i < arguments.length; i++) {
+      var c = arguments[i];
+      if (c == null || c === false) continue;
+      e.append(c.nodeType ? c : document.createTextNode(String(c)));
+    }
+    return e;
+  }
+  function empty(title, msg) {
+    return h('div', { class: 'empty' }, h('div', { class: 'plate' }, title && h('strong', null, title), msg));
+  }
+  function canWrite() { return mode === 'writer'; }
+
+  /* Logo: two interlocking blocks (the hall) cut open by an eye (the record) */
+  var LOGO = '<svg viewBox="0 0 140 120" role="img" aria-label="Hall of Shame logo">' +
+    '<path class="blk a" d="M0 0H66V36H46V84H66V120H0Z"/>' +
+    '<path class="blk b" d="M74 0H140V120H74V76H54V44H74Z"/>' +
+    '<g class="eyeg"><path class="eye" d="M28 60C46 22 94 22 112 60C94 98 46 98 28 60Z"/><circle class="iris" cx="70" cy="60" r="12"/></g>' +
+    '</svg>';
+  $('logo-big').innerHTML = LOGO;
+  $('logo-small').innerHTML = LOGO;
+  $('logo-mini').innerHTML = LOGO;
+
+  /* PIN helpers */
+  function sess() { try { return sessionStorage.getItem('hos-w'); } catch (e) { return null; } }
+  function remember(v) { try { sessionStorage.setItem('hos-w', v); } catch (e) {} }
+  function forget() { try { sessionStorage.removeItem('hos-w'); } catch (e) {} }
+  function randomHex() {
+    var a = new Uint8Array(16); crypto.getRandomValues(a);
+    return Array.from(a).map(function (b) { return b.toString(16).padStart(2, '0'); }).join('');
+  }
+  var SHA_K = [], SHA_H = [];
+  (function () {
+    function frac(x) { return ((x - Math.floor(x)) * 4294967296) | 0; }
+    for (var p = 2, n = 0; n < 64; p++) {
+      var prime = true;
+      for (var d = 2; d * d <= p; d++) { if (p % d === 0) { prime = false; break; } }
+      if (!prime) continue;
+      if (n < 8) SHA_H[n] = frac(Math.pow(p, 1 / 2));
+      SHA_K[n++] = frac(Math.pow(p, 1 / 3));
+    }
+  })();
+  function sha256hex(str) {
+    var bytes = new TextEncoder().encode(str), len = bytes.length;
+    var total = (((len + 8) >> 6) + 1) << 4;
+    var words = new Uint32Array(total);
+    for (var i = 0; i < len; i++) words[i >> 2] |= bytes[i] << (24 - (i % 4) * 8);
+    words[len >> 2] |= 0x80 << (24 - (len % 4) * 8);
+    words[total - 1] = (len * 8) >>> 0;
+    var H = SHA_H.slice(), w = new Uint32Array(64);
+    for (var blk = 0; blk < total; blk += 16) {
+      var t;
+      for (t = 0; t < 16; t++) w[t] = words[blk + t];
+      for (t = 16; t < 64; t++) {
+        var x0 = w[t - 15], x1 = w[t - 2];
+        var s0 = ((x0 >>> 7) | (x0 << 25)) ^ ((x0 >>> 18) | (x0 << 14)) ^ (x0 >>> 3);
+        var s1 = ((x1 >>> 17) | (x1 << 15)) ^ ((x1 >>> 19) | (x1 << 13)) ^ (x1 >>> 10);
+        w[t] = (w[t - 16] + s0 + w[t - 7] + s1) | 0;
+      }
+      var a = H[0], bb = H[1], c = H[2], d = H[3], e = H[4], f = H[5], g = H[6], hh = H[7];
+      for (t = 0; t < 64; t++) {
+        var S1 = ((e >>> 6) | (e << 26)) ^ ((e >>> 11) | (e << 21)) ^ ((e >>> 25) | (e << 7));
+        var ch = (e & f) ^ (~e & g);
+        var t1 = (hh + S1 + ch + SHA_K[t] + w[t]) | 0;
+        var S0 = ((a >>> 2) | (a << 30)) ^ ((a >>> 13) | (a << 19)) ^ ((a >>> 22) | (a << 10));
+        var maj = (a & bb) ^ (a & c) ^ (bb & c);
+        var t2 = (S0 + maj) | 0;
+        hh = g; g = f; f = e; e = (d + t1) | 0; d = c; c = bb; bb = a; a = (t1 + t2) | 0;
+      }
+      H[0] = (H[0] + a) | 0; H[1] = (H[1] + bb) | 0; H[2] = (H[2] + c) | 0; H[3] = (H[3] + d) | 0;
+      H[4] = (H[4] + e) | 0; H[5] = (H[5] + f) | 0; H[6] = (H[6] + g) | 0; H[7] = (H[7] + hh) | 0;
+    }
+    return H.map(function (v) { return (v >>> 0).toString(16).padStart(8, '0'); }).join('');
+  }
+  async function hashPin(salt, pin) {
+    var s = salt + ':' + pin;
+    if (window.crypto && window.crypto.subtle) {
+      try {
+        var buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
+        return Array.from(new Uint8Array(buf)).map(function (b) { return b.toString(16).padStart(2, '0'); }).join('');
+      } catch (e) {}
+    }
+    return sha256hex(s);
+  }
+
+  /* Gate */
+  var gate = $('gate'), splash = $('splash'), pad = $('pad'), wrapEl = $('wrap');
+  document.body.classList.add('locked');
+
+  ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'CLR', '0', 'DEL'].forEach(function (k) {
+    var label = k === 'CLR' ? 'Clear' : k === 'DEL' ? 'Delete last digit' : k;
+    var b = h('button', { class: 'key' + (k.length > 1 ? ' fn' : ''), type: 'button', 'aria-label': label }, k);
+    b.addEventListener('click', function () { onKey(k); });
+    $('keys').append(b);
+  });
+
+  function setMsg(t) { $('gmsg').textContent = t || ''; }
+  function lockedOut() { return Date.now() < lockUntil; }
+  function drawDots() {
+    Array.from($('dots').children).forEach(function (d, i) { d.className = 'dot' + (i < entry.length ? ' on' : ''); });
+  }
+  function refreshKeys() {
+    var off = padBusy || lockedOut() || !loaded;
+    Array.from($('keys').children).forEach(function (b) { b.disabled = off; });
+  }
+  function startLock() {
+    clearInterval(lockTimer);
+    function tick() {
+      var s = Math.ceil((lockUntil - Date.now()) / 1000);
+      if (s <= 0) { clearInterval(lockTimer); setMsg(''); refreshKeys(); return; }
+      setMsg('Too many tries. Wait ' + s + 's.'); refreshKeys();
+    }
+    tick(); lockTimer = setInterval(tick, 500);
+  }
+  function shake() {
+    var d = $('dots'); d.classList.remove('shake'); void d.offsetWidth; d.classList.add('shake');
+  }
+
+  function renderPad() {
+    var title = $('pad-title'), sub = $('pad-sub'), vis = $('btn-visit');
+    var pr = effectivePin();
+    if (phase === 'enter' && loaded && pr === null) phase = 'create1';
+    if (phase === 'enter' && pr && sess() === pr.hash) { enterMode('writer'); return; }
+    var changing = phase === 'change1' || phase === 'change2';
+    if (phase === 'enter') {
+      title.textContent = 'Enter PIN';
+      sub.textContent = loaded ? 'Type your PIN to write stories.' : 'Checking the Hall...';
+    } else if (phase === 'create1' || phase === 'change1') {
+      title.textContent = changing ? 'New PIN' : 'Create a PIN';
+      sub.textContent = 'Choose ' + PIN_LEN + ' digits. You will use them to write.';
+    } else {
+      title.textContent = 'Repeat the PIN';
+      sub.textContent = 'Type the same ' + PIN_LEN + ' digits again.';
+    }
+    vis.textContent = changing ? 'Cancel' : "I'm a visitor";
+    drawDots(); refreshKeys();
+  }
+
+  function applyMode() {
+    var w = canWrite();
+    $('formpanel').hidden = !w;
+    $('tformpanel').hidden = !w;
+    $('sformpanel').hidden = !w;
+    var b = $('badge');
+    b.textContent = w ? 'Writer' : 'Read only';
+    b.className = 'badge' + (w ? ' w' : '');
+    $('btn-lock').textContent = w ? 'Lock' : 'Unlock';
+    $('btn-pin').hidden = !w;
+  }
+  function enterMode(m) {
+    clearTimeout(splashTimer);
+    mode = m; phase = 'enter'; entry = ''; firstPin = '';
+    gate.hidden = true;
+    wrapEl.removeAttribute('inert');
+    document.body.classList.remove('locked');
+    applyMode(); render();
+    window.scrollTo(0, 0);
+  }
+  function openGate(p) {
+    mode = 'gate'; phase = p || 'enter'; entry = ''; firstPin = '';
+    gate.hidden = false; splash.hidden = true; pad.hidden = false;
+    wrapEl.setAttribute('inert', '');
+    document.body.classList.add('locked');
+    setMsg(''); if (lockedOut()) startLock();
+    renderPad();
+  }
+  function endSplash() { if (mode === 'splash') { clearTimeout(splashTimer); openGate('enter'); } }
+
+  function onKey(k) {
+    if (padBusy || lockedOut() || !loaded) return;
+    if (k === 'CLR') entry = '';
+    else if (k === 'DEL') entry = entry.slice(0, -1);
+    else if (entry.length < PIN_LEN) entry += k;
+    setMsg(''); drawDots();
+    if (entry.length === PIN_LEN) complete();
+  }
+
+  async function complete() {
+    var pin = entry;
+    padBusy = true; refreshKeys();
+    try {
+      if (phase === 'enter') {
+        var pr = effectivePin(), ok = false;
+        try { ok = !!pr && (await hashPin(pr.salt, pin)) === pr.hash; }
+        catch (e) { entry = ''; drawDots(); setMsg('This browser cannot check PINs. Use visitor mode.'); return; }
+        if (ok) { fails = 0; remember(pr.hash); enterMode('writer'); return; }
+        fails++; entry = ''; drawDots(); shake();
+        if (fails >= 5) { fails = 0; lockUntil = Date.now() + 30000; startLock(); }
+        else setMsg('Wrong PIN. ' + (5 - fails) + (5 - fails === 1 ? ' try' : ' tries') + ' left.');
+      } else if (phase === 'create1' || phase === 'change1') {
+        firstPin = pin; entry = ''; phase = phase === 'create1' ? 'create2' : 'change2'; renderPad(); setMsg('');
+      } else {
+        if (pin !== firstPin) {
+          entry = ''; firstPin = ''; phase = phase === 'create2' ? 'create1' : 'change1'; renderPad();
+          setMsg('The PINs did not match. Start again.');
+        } else {
+          try {
+            var salt = randomHex(), hash = await hashPin(salt, pin);
+            draft.pin = { salt: salt, hash: hash }; saveDraft();
+            remember(hash); enterMode('writer'); return;
+          } catch (e) {
+            entry = ''; firstPin = ''; phase = effectivePin() ? 'enter' : 'create1'; renderPad();
+            setMsg('This browser cannot save a PIN. Use visitor mode.');
+          }
+        }
+      }
+    } finally {
+      padBusy = false;
+      if (mode === 'gate') refreshKeys();
+    }
+  }
+
+  splash.addEventListener('click', endSplash);
+  $('btn-visit').addEventListener('click', function () {
+    if (phase === 'change1' || phase === 'change2') enterMode('writer'); else enterMode('visitor');
+  });
+  $('btn-lock').addEventListener('click', function () { forget(); openGate('enter'); });
+  $('btn-pin').addEventListener('click', function () { openGate('change1'); });
+  document.addEventListener('keydown', function (ev) {
+    if (mode === 'splash' && (ev.key === 'Enter' || ev.key === ' ')) { ev.preventDefault(); endSplash(); return; }
+    if (mode !== 'gate' || pad.hidden) return;
+    if (/^[0-9]$/.test(ev.key)) { ev.preventDefault(); onKey(ev.key); }
+    else if (ev.key === 'Backspace') { ev.preventDefault(); onKey('DEL'); }
+  });
+
+  var reduce = false;
+  try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+  splashTimer = setTimeout(endSplash, reduce ? 900 : 3300);
+
+  /* Form selects */
+  var kindSel = $('kind'), flt = $('filter');
+  KINDS.forEach(function (n) { kindSel.append(h('option', { value: n }, n)); });
+  flt.append(h('option', { value: 'all' }, 'All types'));
+  KINDS.forEach(function (n) { flt.append(h('option', { value: n }, n)); });
+
+  try { var saved = localStorage.getItem('hos-author'); if (saved) { $('author').value = saved; $('tauthor').value = saved; } } catch (e) {}
+
+  /* Score readout */
+  function syncScore() {
+    var v = Number($('score').value), t = tierOf(v);
+    $('score-num').textContent = String(v);
+    $('score-tier').textContent = TIER_LABELS[t];
+    $('shamebox').className = 'shame t' + t;
+  }
+  $('score').addEventListener('input', syncScore);
+  syncScore();
+
+  /* Filters */
+  flt.addEventListener('change', function () { filter = flt.value; render(); });
+  function setSort(s) {
+    sort = s;
+    $('sort-new').setAttribute('aria-pressed', String(s === 'new'));
+    $('sort-score').setAttribute('aria-pressed', String(s === 'score'));
+    render();
+  }
+  $('sort-new').addEventListener('click', function () { setSort('new'); });
+  $('sort-score').addEventListener('click', function () { setSort('score'); });
+
+  /* Derived data */
+  function visible() {
+    return stories.filter(function (s) { return filter === 'all' || s.kind === filter; });
+  }
+  function ranking(list) {
+    var m = new Map();
+    list.forEach(function (s) {
+      var g = m.get(s.key);
+      if (!g) { g = { key: s.key, name: s.player, pts: 0, n: 0 }; m.set(s.key, g); }
+      g.pts += s.score; g.n++;
+    });
+    return Array.from(m.values()).sort(function (a, b) {
+      return b.pts - a.pts || (b.pts / b.n) - (a.pts / a.n) || a.name.localeCompare(b.name);
+    });
+  }
+
+  /* Render */
+  function renderBoard(list) {
+    var box = $('board');
+    box.textContent = '';
+    $('board-sub').textContent = filter === 'all' ? 'Players by total shame points.' : 'Players tagged ' + filter + ', by total shame points.';
+    if (!loaded) { box.append(empty('', failed ? 'The ranking could not load.' : 'Loading the ranking...')); return; }
+    var rk = ranking(list);
+    if (!rk.length) {
+      box.append(empty('Nobody ranked yet', 'Once a story is filed, that player lands on the board.'));
+      return;
+    }
+    var max = rk[0].pts || 1;
+    var ol = h('ol', { class: 'rows' });
+    rk.slice(0, 10).forEach(function (g, i) {
+      var avg = g.pts / g.n, tier = tierOf(Math.round(avg));
+      var bar = h('span', { class: 'bar t' + tier }, h('i'));
+      bar.firstChild.style.width = Math.max(4, Math.round(g.pts / max * 100)) + '%';
+      ol.append(h('li', { class: 'row' + (i === 0 ? ' top' : '') },
+        h('span', { class: 'rank' }, i === 0 && h('i', { class: 'seed', 'aria-hidden': 'true' }), i + 1),
+        h('div', { class: 'who' },
+          h('strong', { class: 'name' }, g.name),
+          h('span', { class: 'meta' }, 'ID ' + codeOf(g.key) + ' / ' + g.n + (g.n === 1 ? ' story' : ' stories') + ' / avg ' + avg.toFixed(1)),
+          bar),
+        h('span', { class: 'pts' }, g.pts, h('small', null, 'pts'))));
+    });
+    box.append(ol);
+    if (rk.length > 10) box.append(h('p', { class: 'more' }, '+ ' + (rk.length - 10) + ' more players below the top 10'));
+  }
+
+  function fmtDate(ms) {
+    if (!ms) return '';
+    try { return new Date(ms).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' }); } catch (e) { return ''; }
+  }
+
+  function removeBtn(col, id) {
+    var b = h('button', { class: 'link', type: 'button' }, 'Remove');
+    var armed = false, t = null;
+    b.addEventListener('click', function () {
+      if (!canWrite()) return;
+      if (!armed) {
+        armed = true; b.textContent = 'Confirm remove';
+        t = setTimeout(function () { armed = false; b.textContent = 'Remove'; }, 4000);
+        return;
+      }
+      clearTimeout(t);
+      removeItem(col, id); saveDraft(); render();
+    });
+    return b;
+  }
+
+  function card(s) {
+    var tier = tierOf(s.score);
+    var foot = h('div', { class: 'foot' },
+      h('span', { class: 'lvl' }, TIER_LABELS[tier]),
+      s.author && h('span', null, 'by ' + s.author));
+    if (/^https?:\/\/\S+$/i.test(s.source)) {
+      var host = 'clip';
+      try { host = new URL(s.source).hostname.replace(/^www\./, ''); } catch (e) {}
+      foot.append(h('a', { href: s.source, target: '_blank', rel: 'noopener noreferrer' }, 'Clip: ' + host));
+    }
+    if (canWrite()) foot.append(removeBtn('stories', s.id));
+    return h('article', { class: 'story t' + tier },
+      h('div', { class: 'fileline' }, h('span', null, 'File ' + codeOf(s.id)), h('span', null, fmtDate(s.createdAt))),
+      h('div', { class: 'score', 'aria-label': 'Shame score ' + s.score + ' out of 10' }, h('b', null, s.score), h('span', null, '/10')),
+      h('div', { class: 'sbody' },
+        h('div', { class: 'top-line' },
+          h('span', { class: 'co' }, s.player),
+          h('span', { class: 'tag' }, s.kind),
+          s.example && h('span', { class: 'tag ex' }, 'Example')),
+        h('h3', null, s.headline),
+        h('p', null, s.body),
+        foot));
+  }
+
+  function renderFeed(list) {
+    var box = $('feed'), notice = $('notice');
+    box.textContent = ''; notice.textContent = '';
+    if (!loaded) {
+      $('feed-sub').textContent = '';
+      box.append(empty('', failed ? 'The record could not load. Reload the page to try again.' : 'Loading the record...'));
+      return;
+    }
+    $('feed-sub').textContent = list.length + (list.length === 1 ? ' story' : ' stories') + (filter === 'all' ? ' on file' : ' tagged ' + filter);
+    if (!list.length) {
+      box.append(empty('The Hall is empty', filter === 'all' ? (canWrite() ? 'File the first story above and it shows up here and in the ranking.' : 'No stories have been filed yet.') : 'No stories tagged ' + filter + ' yet.'));
+      return;
+    }
+    var sorted = list.slice();
+    if (sort === 'score') sorted.sort(function (a, b) { return b.score - a.score || b.createdAt - a.createdAt; });
+    sorted.forEach(function (s) { box.append(card(s)); });
+  }
+
+  function renderPlayers() {
+    var dl = $('player-list'), seen = new Map();
+    stories.forEach(function (s) { if (!seen.has(s.key)) seen.set(s.key, s.player); });
+    dl.textContent = '';
+    seen.forEach(function (name) { dl.append(h('option', { value: name })); });
+  }
+
+  function render() {
+    rebuild();
+    var list = visible();
+    renderBoard(list);
+    renderFeed(list);
+    renderPlayers();
+    renderPub();
+    renderTheories();
+    renderSupporters();
+  }
+
+  /* Filing a story */
+  function say(msg, isErr) {
+    var el = $('say');
+    el.textContent = msg;
+    el.className = 'say' + (isErr ? ' err' : '');
+  }
+
+  $('form').addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    if (!canWrite() || busy) return;
+    var f = ev.target.elements;
+    var player = f.player.value.trim().replace(/\s+/g, ' ');
+    var headline = f.headline.value.trim();
+    var body = f.body.value.trim();
+    var source = f.source.value.trim();
+    var err = '';
+    if (!player) err = 'Add the player\'s in-game username.';
+    else if (!headline) err = 'Add a headline.';
+    else if (body.length < 20) err = 'Write a couple of sentences so the story stands on its own.';
+    else if (PII.test(player + ' ' + headline + ' ' + body)) err = 'Leave out emails, phone numbers and other personal details.';
+    else if (source && !/^https?:\/\/\S+$/i.test(source)) err = 'The link must start with http:// or https://.';
+    if (err) { say(err, true); return; }
+    var author = f.author.value.trim();
+    draft.stories.added.push({
+      id: 's-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+      player: player, kind: f.kind.value, headline: headline, body: body, source: source,
+      score: Number(f.score.value), createdAt: Date.now(), author: author
+    });
+    saveDraft();
+    try { localStorage.setItem('hos-author', author); } catch (e) {}
+    f.player.value = ''; f.headline.value = ''; f.body.value = ''; f.source.value = '';
+    f.score.value = '5'; syncScore();
+    say('Added on this device. Download stories.js to publish it.');
+    render();
+  });
+
+  function copyText(text, btn) {
+    function done(ok) {
+      btn.textContent = ok ? 'Copied' : 'Copy failed';
+      setTimeout(function () { btn.textContent = 'Copy as text'; }, 2000);
+    }
+    function legacy() {
+      var ta = document.createElement('textarea');
+      ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.append(ta); ta.select(); ta.setSelectionRange(0, text.length);
+      var ok = false;
+      try { ok = document.execCommand('copy'); } catch (e) {}
+      ta.remove(); done(ok);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function () { done(true); }, legacy);
+    else legacy();
+  }
+
+  /* Publish bar: unpublished changes and example notice */
+  function renderPub() {
+    var box = $('pubbar');
+    box.textContent = '';
+    if (!loaded) return;
+    var w = canWrite();
+    if (w && pending() > 0) {
+      var n = pending();
+      var dl = h('button', { class: 'btn', type: 'button' }, 'Download stories.js');
+      dl.addEventListener('click', download);
+      var cp = h('button', { class: 'link', type: 'button' }, 'Copy as text');
+      cp.addEventListener('click', function () { copyText(exportText(), cp); });
+      var disc = h('button', { class: 'link', type: 'button' }, 'Discard changes');
+      var armed = false, t = null;
+      disc.addEventListener('click', function () {
+        if (!armed) { armed = true; disc.textContent = 'Really discard?'; t = setTimeout(function () { armed = false; disc.textContent = 'Discard changes'; }, 4000); return; }
+        clearTimeout(t);
+        draft = freshDraft(); saveDraft(); render();
+      });
+      var pub = h('button', { class: 'btn', type: 'button' }, 'Publish now');
+      var msg = h('p', { 'aria-live': 'polite' }, '');
+      var setup = h('div', { hidden: true });
+      function field(ph, type) { var f = h('input', { type: type || 'text', placeholder: ph, autocomplete: 'off', autocapitalize: 'none', spellcheck: 'false' }); f.style.cssText = 'display:block;width:100%;min-height:44px;margin:6px 0;padding:0 12px;font:inherit;box-sizing:border-box'; return f; }
+      var fo = field('GitHub username'), fr = field('Repository name'), ft = field('Token (starts with github_pat_)', 'password');
+      var cur = ghConf();
+      if (cur) { fo.value = cur.owner; fr.value = cur.repo; }
+      var save = h('button', { class: 'btn', type: 'button' }, 'Save and publish');
+      setup.append(h('p', null, 'Saved only in this browser. Use a token limited to this one repository.'), fo, fr, ft, save);
+      async function run() {
+        pub.disabled = true; save.disabled = true; msg.textContent = 'Publishing...';
+        try { await ghPublish(); }
+        catch (e) { msg.textContent = (e && e.message) || 'Could not publish.'; pub.disabled = false; save.disabled = false; return; }
+        msg.textContent = '';
+        box.textContent = '';
+        box.append(h('div', { class: 'notice' }, h('p', null, 'Published. Visitors see it in about a minute.')));
+        setTimeout(renderPub, 6000);
+      }
+      pub.addEventListener('click', function () { if (ghConf()) run(); else { setup.hidden = false; fo.focus(); } });
+      save.addEventListener('click', function () {
+        var o = fo.value.trim(), r = fr.value.trim(), t = ft.value.trim() || (cur && cur.token) || '';
+        if (!o || !r || !t) { msg.textContent = 'Fill in all three boxes.'; return; }
+        try { localStorage.setItem(GH_KEY, JSON.stringify({ owner: o, repo: r, token: t })); } catch (e) { msg.textContent = 'This browser would not save the details.'; return; }
+        setup.hidden = true; run();
+      });
+      var edit = h('button', { class: 'link', type: 'button' }, 'GitHub details');
+      edit.addEventListener('click', function () { setup.hidden = !setup.hidden; });
+      box.append(h('div', { class: 'notice' },
+        h('p', null, n + (n === 1 ? ' unpublished change' : ' unpublished changes') + ' on this device. Tap Publish now to put ' + (n === 1 ? 'it' : 'them') + ' on your site.'),
+        pub, edit, msg, setup, dl, cp, disc));
+    }
+    var anyEx = stories.concat(theories, supporters).some(function (x) { return x.example; });
+    if (anyEx) {
+      var clear = null;
+      if (w) {
+        clear = h('button', { class: 'link', type: 'button' }, 'Clear examples');
+        clear.addEventListener('click', function () {
+          COLS.forEach(function (c) {
+            var list = c === 'stories' ? stories : c === 'theories' ? theories : supporters;
+            list.filter(function (x) { return x.example; }).forEach(function (x) { removeItem(c, x.id); });
+          });
+          saveDraft(); render();
+        });
+      }
+      box.append(h('div', { class: 'notice' },
+        h('p', null, 'Entries tagged Example are made up.' + (w ? ' Clear them when you are ready to add real ones.' : '')),
+        clear));
+    }
+  }
+
+  /* Conspiracy board */
+  function pips(n) {
+    var w = h('span', { class: 'pips', role: 'img', 'aria-label': 'Tinfoil level ' + n + ' of 5: ' + LEVELS[n] });
+    for (var i = 1; i <= 5; i++) w.append(h('i', { class: i <= n ? 'on' : '' }));
+    return w;
+  }
+  function theoryCard(t) {
+    var foot = h('div', { class: 'foot' },
+      h('span', { class: 'lvl' }, LEVELS[t.level]),
+      t.author && h('span', null, 'filed by ' + t.author));
+    if (canWrite()) foot.append(removeBtn('theories', t.id));
+    return h('article', { class: 'story theory st-' + t.status.toLowerCase() },
+      h('div', { class: 'fileline' }, h('span', null, 'Case ' + codeOf(t.id)), h('span', null, fmtDate(t.createdAt))),
+      h('div', { class: 'sbody' },
+        h('div', { class: 'top-line' },
+          h('span', { class: 'tag status' }, t.status),
+          pips(t.level),
+          t.example && h('span', { class: 'tag ex' }, 'Example')),
+        h('h3', null, t.title),
+        h('p', null, t.body),
+        foot));
+  }
+  function renderTheories() {
+    var box = $('tfeed');
+    box.textContent = '';
+    if (!loaded) {
+      $('theory-sub').textContent = 'Game theories, rated by how much tinfoil they need.';
+      box.append(empty('', failed ? 'The theories could not load.' : 'Loading the theories...'));
+      return;
+    }
+    $('theory-sub').textContent = theories.length + (theories.length === 1 ? ' theory' : ' theories') + ' on the board. Game theories, rated by how much tinfoil they need.';
+    if (!theories.length) {
+      box.append(empty('The board is clear', canWrite() ? 'Post the first theory above.' : 'No theories have been posted yet.'));
+      return;
+    }
+    theories.forEach(function (t) { box.append(theoryCard(t)); });
+  }
+
+  /* Supporters wall */
+  function supporterCard(s) {
+    var foot = h('div', { class: 'foot' }, fmtDate(s.createdAt) && h('span', null, 'since ' + fmtDate(s.createdAt)));
+    if (canWrite()) foot.append(removeBtn('supporters', s.id));
+    return h('article', { class: 'sup' },
+      h('div', { class: 'top-line' },
+        h('i', { class: 'seed', 'aria-hidden': 'true' }),
+        h('strong', { class: 'co' }, s.name),
+        s.example && h('span', { class: 'tag ex' }, 'Example')),
+      s.note && h('p', null, s.note),
+      foot);
+  }
+  function renderSupporters() {
+    var box = $('sfeed');
+    box.textContent = '';
+    if (!loaded) {
+      $('sup-sub').textContent = '';
+      box.append(empty('', failed ? 'The wall could not load.' : 'Loading the wall...'));
+      return;
+    }
+    $('sup-sub').textContent = supporters.length + (supporters.length === 1 ? ' person backs' : ' people back') + ' the Hall.';
+    if (!supporters.length) {
+      box.append(empty('Nobody listed yet', canWrite() ? 'Add the first supporter above.' : 'Supporters will appear here.'));
+      return;
+    }
+    supporters.forEach(function (s) { box.append(supporterCard(s)); });
+  }
+
+  var tstatus = $('tstatus'), tlevel = $('tlevel');
+  STATUSES.forEach(function (n) { tstatus.append(h('option', { value: n }, n)); });
+  for (var li = 1; li <= 5; li++) tlevel.append(h('option', { value: String(li) }, li + ' - ' + LEVELS[li]));
+  tlevel.value = '3';
+
+  function sayTo(id, msg, isErr) {
+    var el = $(id);
+    el.textContent = msg;
+    el.className = 'say' + (isErr ? ' err' : '');
+  }
+
+  $('tform').addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    if (!canWrite()) return;
+    var f = ev.target.elements;
+    var title = f.ttitle.value.trim().replace(/\s+/g, ' ');
+    var body = f.tbody.value.trim();
+    var err = '';
+    if (!title) err = 'Give the theory a title.';
+    else if (body.length < 20) err = 'Write a couple of sentences so the theory stands on its own.';
+    else if (PII.test(title + ' ' + body)) err = 'Leave out emails, phone numbers and other personal details.';
+    if (err) { sayTo('tsay', err, true); return; }
+    var author = f.tauthor.value.trim();
+    draft.theories.added.push({
+      id: 't-' + uid(), title: title, body: body, status: f.tstatus.value,
+      level: Number(f.tlevel.value), createdAt: Date.now(), author: author
+    });
+    saveDraft();
+    try { localStorage.setItem('hos-author', author); } catch (e) {}
+    f.ttitle.value = ''; f.tbody.value = ''; f.tstatus.value = 'Unproven'; f.tlevel.value = '3';
+    sayTo('tsay', 'Pinned on this device. Download stories.js to publish it.');
+    render();
+  });
+
+  $('sform').addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    if (!canWrite()) return;
+    var f = ev.target.elements;
+    var name = f.sname.value.trim().replace(/\s+/g, ' ');
+    var note = f.snote.value.trim();
+    var err = '';
+    if (!name) err = 'Add the supporter\'s name.';
+    else if (PII.test(name + ' ' + note)) err = 'Leave out emails, phone numbers and other personal details.';
+    if (err) { sayTo('ssay', err, true); return; }
+    draft.supporters.added.push({ id: 'p-' + uid(), name: name, note: note, createdAt: Date.now() });
+    saveDraft();
+    f.sname.value = ''; f.snote.value = '';
+    sayTo('ssay', 'Added on this device. Download stories.js to publish it.');
+    render();
+  });
+
+  /* Theme: Auto follows the device, Light and Dark override it. The choice is remembered. */
+  var THEMES = ['auto', 'light', 'dark'];
+  function getTheme() {
+    try { var v = localStorage.getItem('hos-theme'); return THEMES.indexOf(v) >= 0 ? v : 'auto'; } catch (e) { return 'auto'; }
+  }
+  function applyTheme(v) {
+    var r = document.documentElement;
+    if (v === 'auto') r.removeAttribute('data-theme'); else r.setAttribute('data-theme', v);
+    $('btn-theme').textContent = 'Theme: ' + v.charAt(0).toUpperCase() + v.slice(1);
+  }
+  $('btn-theme').addEventListener('click', function () {
+    var v = THEMES[(THEMES.indexOf(getTheme()) + 1) % THEMES.length];
+    try { localStorage.setItem('hos-theme', v); } catch (e) {}
+    applyTheme(v);
+  });
+  applyTheme(getTheme());
+
+  /* Start */
+  applyMode();
+  render();
+  loadBase();
+})();
+</script>
+</body>
+</html>
