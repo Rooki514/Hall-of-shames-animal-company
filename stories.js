@@ -1,22 +1,9 @@
 window.HOS_DATA = {
   "pin": {
-    "salt": "c460458ef38ffcb3414ab3407ff26155",
-    "hash": "1f07ade54735879fe01e19f9941ed0af5a5e46e465fec59fa81bd1c71bbbfaab"
+    "salt": "4397f838411d5411",
+    "hash": "f423a15f6f021f63c52bc7f671966a296397d2fdcb0c44a4ff7697b2e1c77902"
   },
-  "stories": [
-    {
-      "id": "s-mwfifdc1jmim",
-      "player": "Ah",
-      "kind": "Griefing",
-      "headline": "Test001",
-      "body": "sokjlhjchfndbvjeknlfxkcbv",
-      "source": "",
-      "score": 5,
-      "createdAt": 1794606587713,
-      "author": "",
-      "example": false
-    }
-  ],
+  "stories": [],
   "theories": [],
   "supporters": []
 };
