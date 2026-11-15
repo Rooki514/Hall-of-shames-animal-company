@@ -15,18 +15,6 @@ window.HOS_DATA = {
       "createdAt": 1794773335833,
       "author": "Rookie",
       "example": false
-    },
-    {
-      "id": "s-mwg6f3syguc9",
-      "player": "Announcement",
-      "kind": "Griefing",
-      "headline": "WE ARE LIVE",
-      "body": "The website is live and is fully useable.Just wondering who will advertise it👀",
-      "source": "",
-      "score": 1,
-      "createdAt": 1794646886147,
-      "author": "Rookie",
-      "example": false
     }
   ],
   "theories": [],
