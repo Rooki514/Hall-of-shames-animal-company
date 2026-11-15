@@ -18,5 +18,13 @@ window.HOS_DATA = {
     }
   ],
   "theories": [],
-  "supporters": []
+  "supporters": [
+    {
+      "id": "p-mwice0t5w9h7",
+      "name": "Souverign Mafia",
+      "note": "Its a whole Empire supporting us,how kind!",
+      "createdAt": 1794777845657,
+      "example": false
+    }
+  ]
 };
