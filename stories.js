@@ -5,18 +5,6 @@ window.HOS_DATA = {
   },
   "stories": [
     {
-      "id": "s-mwgnueqrtjv6",
-      "player": "Monkey",
-      "kind": "Griefing",
-      "headline": "Killed monkey",
-      "body": "Uchi uchi skekelwjw dbsksjjaqbvsksakbawv",
-      "source": "",
-      "score": 1,
-      "createdAt": 1794676153635,
-      "author": "",
-      "example": false
-    },
-    {
       "id": "s-mwg6f3syguc9",
       "player": "Announcement",
       "kind": "Griefing",
