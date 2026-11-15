@@ -5,6 +5,18 @@ window.HOS_DATA = {
   },
   "stories": [
     {
+      "id": "s-mwi9pd09vsb5",
+      "player": "Canine",
+      "kind": "Other",
+      "headline": "Sloppy scripted War with an other Industry",
+      "body": "Im really late to this but I will still tell what exactly happened.Basically Canine had a war with Cheeto Industries which got popular back then.The whole war was scripted,all of these Videos claiming that the war was real were fake.Canine was the biggest liar during the war.He told people that everything was real and that he needed help.When people tried to help Canine he kicked everyone for no proper reason.It was nothing but a quick view Farm made by Canine and Cheetopuff 6000 or cheeto industry.You can see it in their videos and fun fact,there was never a big war at the end.",
+      "source": "",
+      "score": 6,
+      "createdAt": 1794773335833,
+      "author": "Rookie",
+      "example": false
+    },
+    {
       "id": "s-mwg6f3syguc9",
       "player": "Announcement",
       "kind": "Griefing",
