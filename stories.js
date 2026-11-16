@@ -17,7 +17,18 @@ window.HOS_DATA = {
       "example": false
     }
   ],
-  "theories": [],
+  "theories": [
+    {
+      "id": "t-mwjdqhh2z9o8",
+      "title": "AC MOM uses AI for Videos?",
+      "body": "If you look at AC MOMS content you can notice she is almost always tilted and never looks straight into the camera.Also you can see her looking up sometimes too.That could be evidence for using a script.What makes it AI is her sentences.During a video of AC MOM where she talked about goop inventions,she said “the community even build a replica of the human anatomy” which is completely wrong and there is not proper proof that they actually build it.Also AC MOM used AI to make herself profile pictures,so its not the first time we see her using AI and proves that she has a AI account.",
+      "status": "Unproven",
+      "level": 3,
+      "createdAt": 1794840572918,
+      "author": "Rookie",
+      "example": false
+    }
+  ],
   "supporters": [
     {
       "id": "p-mwice0t5w9h7",
